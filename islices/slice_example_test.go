@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"math"
 	"reflect"
+	"slices"
 	"strconv"
 	"strings"
 )
 
-func ExampleContainSubSlice() {
-	result1 := ContainSubSlice([]string{"a", "b", "c"}, []string{"a", "b"})
-	result2 := ContainSubSlice([]string{"a", "b", "c"}, []string{"a", "d"})
+func ExampleContainsSubSlice() {
+	result1 := ContainsSubSlice([]string{"a", "b", "c"}, []string{"a", "b"})
+	result2 := ContainsSubSlice([]string{"a", "b", "c"}, []string{"a", "d"})
 
 	fmt.Println(result1)
 	fmt.Println(result2)
@@ -18,29 +19,6 @@ func ExampleContainSubSlice() {
 	// Output:
 	// true
 	// false
-}
-
-func ExampleChunk() {
-	arr := []string{"a", "b", "c", "d", "e"}
-
-	result1 := Chunk(arr, 1)
-	result2 := Chunk(arr, 2)
-	result3 := Chunk(arr, 3)
-	result4 := Chunk(arr, 4)
-	result5 := Chunk(arr, 5)
-
-	fmt.Println(result1)
-	fmt.Println(result2)
-	fmt.Println(result3)
-	fmt.Println(result4)
-	fmt.Println(result5)
-
-	// Output:
-	// [[a] [b] [c] [d] [e]]
-	// [[a b] [c d] [e]]
-	// [[a b c] [d e]]
-	// [[a b c d] [e]]
-	// [[a b c d e]]
 }
 
 func ExampleCompact() {
@@ -1177,7 +1155,7 @@ func ExampleRandom() {
 	nums := []int{1, 2, 3, 4, 5}
 
 	val, idx := Random(nums)
-	if idx >= 0 && idx < len(nums) && Contain(nums, val) {
+	if idx >= 0 && idx < len(nums) && slices.Contains(nums, val) {
 		fmt.Println("okk")
 	}
 

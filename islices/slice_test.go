@@ -32,32 +32,7 @@ func TestContainsSubSlice(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		assert.Equal(tt.want, ContainSubSlice(tt.slice, tt.subSlice))
-	}
-}
-
-func TestChunk(t *testing.T) {
-	t.Parallel()
-
-	assert := internal.NewAssert(t, "TestChunk")
-
-	tests := []struct {
-		slice     []string
-		chuanSize int
-		want      [][]string
-	}{
-		{[]string{"a", "b", "c", "d", "e"}, -1, [][]string{}},
-		{[]string{"a", "b", "c", "d", "e"}, 0, [][]string{}},
-		{[]string{"a", "b", "c", "d", "e"}, 1, [][]string{{"a"}, {"b"}, {"c"}, {"d"}, {"e"}}},
-		{[]string{"a", "b", "c", "d", "e"}, 2, [][]string{{"a", "b"}, {"c", "d"}, {"e"}}},
-		{[]string{"a", "b", "c", "d", "e"}, 3, [][]string{{"a", "b", "c"}, {"d", "e"}}},
-		{[]string{"a", "b", "c", "d", "e"}, 4, [][]string{{"a", "b", "c", "d"}, {"e"}}},
-		{[]string{"a", "b", "c", "d", "e"}, 5, [][]string{{"a", "b", "c", "d", "e"}}},
-		{[]string{"a", "b", "c", "d", "e"}, 6, [][]string{{"a", "b", "c", "d", "e"}}},
-	}
-
-	for _, tt := range tests {
-		assert.Equal(tt.want, Chunk(tt.slice, tt.chuanSize))
+		assert.Equal(tt.want, ContainsSubSlice(tt.slice, tt.subSlice))
 	}
 }
 

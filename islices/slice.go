@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"math/rand"
 	"reflect"
+	stdslices "slices"
 	"sort"
 	"strings"
 	"sync"
@@ -38,9 +39,9 @@ If you do not find the functionality you are looking for here (and it is so triv
 the most likely explanation is that it is promptly available from the go std lib.
 **/
 
-// ContainSubSlice check if the slice contain a given subslice or not.
+// ContainsSubSlice check if the slice contain a given subslice or not.
 // Play: https://go.dev/play/p/bcuQ3UT6Sev
-func ContainSubSlice[T comparable](slice, subSlice []T) bool {
+func ContainsSubSlice[T comparable](slice, subSlice []T) bool {
 	if len(subSlice) == 0 {
 		return true
 	}
@@ -994,7 +995,7 @@ func SymmetricDifference[T comparable](slices ...[]T) []T {
 	for i := 0; i < len(slices); i++ {
 		slice := slices[i]
 		for _, v := range slice {
-			if !Contain(intersectSlice, v) {
+			if !stdslices.Contains(intersectSlice, v) {
 				result = append(result, v)
 			}
 		}
@@ -1209,7 +1210,7 @@ func Without[T comparable](slice []T, items ...T) []T {
 
 	result := make([]T, 0, len(slice))
 	for _, v := range slice {
-		if !Contain(items, v) {
+		if !stdslices.Contains(items, v) {
 			result = append(result, v)
 		}
 	}
@@ -1318,7 +1319,7 @@ func ToSlice[T any](items ...T) []T {
 // AppendIfAbsent only absent append the item.
 // Play: https://go.dev/play/p/KcC1QXQ-RkL
 func AppendIfAbsent[T comparable](slice []T, item T) []T {
-	if !Contain(slice, item) {
+	if !stdslices.Contains(slice, item) {
 		slice = append(slice, item)
 	}
 	return slice
