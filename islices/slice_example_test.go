@@ -8,44 +8,6 @@ import (
 	"strings"
 )
 
-func ExampleContain() {
-	result1 := Contain([]string{"a", "b", "c"}, "a")
-	result2 := Contain([]int{1, 2, 3}, 4)
-
-	fmt.Println(result1)
-	fmt.Println(result2)
-
-	// Output:
-	// true
-	// false
-}
-
-func ExampleContainBy() {
-	type foo struct {
-		A string
-		B int
-	}
-
-	array1 := []foo{{A: "1", B: 1}, {A: "2", B: 2}}
-	result1 := ContainBy(array1, func(f foo) bool { return f.A == "1" && f.B == 1 })
-	result2 := ContainBy(array1, func(f foo) bool { return f.A == "2" && f.B == 1 })
-
-	array2 := []string{"a", "b", "c"}
-	result3 := ContainBy(array2, func(t string) bool { return t == "a" })
-	result4 := ContainBy(array2, func(t string) bool { return t == "d" })
-
-	fmt.Println(result1)
-	fmt.Println(result2)
-	fmt.Println(result3)
-	fmt.Println(result4)
-
-	// Output:
-	// true
-	// false
-	// true
-	// false
-}
-
 func ExampleContainSubSlice() {
 	result1 := ContainSubSlice([]string{"a", "b", "c"}, []string{"a", "b"})
 	result2 := ContainSubSlice([]string{"a", "b", "c"}, []string{"a", "d"})

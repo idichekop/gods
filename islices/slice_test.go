@@ -10,63 +10,10 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/duke-git/lancet/v2/internal"
+	"github.com/idichekop/gods/internal"
 )
 
-func TestContain(t *testing.T) {
-	t.Parallel()
-
-	assert := internal.NewAssert(t, "TestContain")
-
-	tests := []struct {
-		slice []string
-		give  string
-		want  bool
-	}{
-		{[]string{"a", "b", "c"}, "a", true},
-		{[]string{"a", "b", "c"}, "d", false},
-		{[]string{""}, "", true},
-		{[]string{}, "", false},
-	}
-
-	for _, tt := range tests {
-		assert.Equal(tt.want, Contain(tt.slice, tt.give))
-	}
-}
-
-func TestContainBy(t *testing.T) {
-	t.Parallel()
-
-	assert := internal.NewAssert(t, "TestContainBy")
-
-	type foo struct {
-		a string
-		b int
-	}
-
-	tests := []struct {
-		slice       []foo
-		predicateFn func(f foo) bool
-		want        bool
-	}{
-		{
-			[]foo{{a: "1", b: 1}, {a: "2", b: 2}},
-			func(f foo) bool { return f.a == "1" && f.b == 1 },
-			true,
-		},
-		{
-			[]foo{{a: "1", b: 1}, {a: "2", b: 2}},
-			func(f foo) bool { return f.a == "2" && f.b == 1 },
-			false,
-		},
-	}
-
-	for _, tt := range tests {
-		assert.Equal(tt.want, ContainBy(tt.slice, tt.predicateFn))
-	}
-}
-
-func TestContainSubSlice(t *testing.T) {
+func TestContainsSubSlice(t *testing.T) {
 	t.Parallel()
 
 	assert := internal.NewAssert(t, "TestContainSubSlice")
