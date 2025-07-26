@@ -60,43 +60,7 @@ func ContainsSubSlice[T comparable](slice, subSlice []T) bool {
 		}
 		elementCount[item]--
 	}
-
 	return true
-}
-
-// Compact creates a slice with all falsey values removed. The values false, nil, 0, and "" are falsey.
-// Play: https://go.dev/play/p/pO5AnxEr3TK
-func Compact[T comparable](slice []T) []T {
-	var zero T
-
-	result := make([]T, 0, len(slice))
-
-	for _, v := range slice {
-		if v != zero {
-			result = append(result, v)
-		}
-	}
-
-	return result[:len(result):len(result)]
-}
-
-// Concat creates a new slice concatenating slice with any additional slices.
-// Play: https://go.dev/play/p/gPt-q7zr5mk
-func Concat[T any](slices ...[]T) []T {
-	totalLen := 0
-	for _, v := range slices {
-		totalLen += len(v)
-		if totalLen < 0 {
-			panic("len out of range")
-		}
-	}
-	result := make([]T, 0, totalLen)
-
-	for _, v := range slices {
-		result = append(result, v...)
-	}
-
-	return result
 }
 
 // Difference creates a slice of whose element in slice but not in comparedSlice.
@@ -181,41 +145,10 @@ func DifferenceWith[T any](slice []T, comparedSlice []T, comparator func(item1, 
 	return result
 }
 
-// Equal checks if two slices are equal: the same length and all elements' order and value are equal.
-// Play: https://go.dev/play/p/WcRQJ37ifPa
-func Equal[T comparable](slice1, slice2 []T) bool {
-	if len(slice1) != len(slice2) {
-		return false
-	}
-
-	for i := range slice1 {
-		if slice1[i] != slice2[i] {
-			return false
-		}
-	}
-
-	return true
-}
-
-// EqualWith checks if two slices are equal with comparator func.
-// Play: https://go.dev/play/p/b9iygtgsHI1
-func EqualWith[T, U any](slice1 []T, slice2 []U, comparator func(T, U) bool) bool {
-	if len(slice1) != len(slice2) {
-		return false
-	}
-
-	for i, v := range slice1 {
-		if !comparator(v, slice2[i]) {
-			return false
-		}
-	}
-
-	return true
-}
-
-// EqualUnordered checks if two slices are equal: the same length and all elements' value are equal (unordered).
+// IsPermutation checks if two slices are equal: the same length and all elements' value are equal (unordered).
+// In other words, checks if the two slices have the same constituents, eventually permutated.
 // Play: https://go.dev/play/p/n8fSc2w8ZgX
-func EqualUnordered[T comparable](slice1, slice2 []T) bool {
+func IsPermutation[T comparable](slice1, slice2 []T) bool {
 	if len(slice1) != len(slice2) {
 		return false
 	}
@@ -236,7 +169,7 @@ func EqualUnordered[T comparable](slice1, slice2 []T) bool {
 }
 
 // Every return true if all of the values in the slice pass the predicate function.
-// Play: https://go.dev/play/p/R8U6Sl-j8cD
+// Functionality from lancet(tm)
 func Every[T any](slice []T, predicate func(index int, item T) bool) bool {
 	for i, v := range slice {
 		if !predicate(i, v) {
@@ -248,20 +181,11 @@ func Every[T any](slice []T, predicate func(index int, item T) bool) bool {
 }
 
 // None return true if all the values in the slice mismatch the criteria.
-// Play: https://go.dev/play/p/KimdalUlC-T
 func None[T any](slice []T, predicate func(index int, item T) bool) bool {
-	l := 0
-	for i, v := range slice {
-		if !predicate(i, v) {
-			l++
-		}
-	}
-
-	return l == len(slice)
+	return !Some(slice, predicate)
 }
 
 // Some return true if any of the values in the list pass the predicate function.
-// Play: https://go.dev/play/p/4pO9Xf9NDGS
 func Some[T any](slice []T, predicate func(index int, item T) bool) bool {
 	for i, v := range slice {
 		if predicate(i, v) {
@@ -272,22 +196,18 @@ func Some[T any](slice []T, predicate func(index int, item T) bool) bool {
 	return false
 }
 
-// Filter iterates over elements of slice, returning an slice of all elements pass the predicate function.
-// Play: https://go.dev/play/p/SdPna-7qK4T
+// Filter iterates over elements of slice, returning a new slice with all elements that pass the predicate function. Filter preserves the order of the filtered elements
 func Filter[T any](slice []T, predicate func(index int, item T) bool) []T {
-	result := make([]T, 0)
-
+	result := make([]T, 0, len(slice))
 	for i, v := range slice {
 		if predicate(i, v) {
 			result = append(result, v)
 		}
 	}
-
-	return result
+	return stdslices.Clip(result)
 }
 
 // Count returns the number of occurrences of the given item in the slice.
-// Play: https://go.dev/play/p/Mj4oiEnQvRJ
 func Count[T comparable](slice []T, item T) int {
 	count := 0
 
@@ -300,9 +220,9 @@ func Count[T comparable](slice []T, item T) int {
 	return count
 }
 
-// CountBy iterates over elements of slice with predicate function, returns the number of all matched elements.
-// Play: https://go.dev/play/p/tHOccTMDZCC
-func CountBy[T any](slice []T, predicate func(index int, item T) bool) int {
+// CountIf iterates over elements of slice with predicate function, returns the number
+// of all matched elements.
+func CountIf[T any](slice []T, predicate func(index int, item T) bool) int {
 	count := 0
 
 	for i, v := range slice {
@@ -314,35 +234,13 @@ func CountBy[T any](slice []T, predicate func(index int, item T) bool) int {
 	return count
 }
 
-// GroupBy iterate over elements of the slice, each element will be group by criteria, returns two slices.
-// Play: https://go.dev/play/p/QVkPxzPR0iA
-func GroupBy[T any](slice []T, groupFn func(index int, item T) bool) ([]T, []T) {
-	if len(slice) == 0 {
-		return make([]T, 0), make([]T, 0)
-	}
-
-	groupB := make([]T, 0)
-	groupA := make([]T, 0)
-
-	for i, v := range slice {
-		ok := groupFn(i, v)
-		if ok {
-			groupA = append(groupA, v)
-		} else {
-			groupB = append(groupB, v)
-		}
-	}
-
-	return groupA, groupB
-}
-
-// GroupWith return a map composed of keys generated from the resultults of running each element of slice thru iteratee.
-// Play: https://go.dev/play/p/ApCvMNTLO8a
-func GroupWith[T any, U comparable](slice []T, iteratee func(item T) U) map[U][]T {
+// GroupBy return a map that groups the elements of the given slice in categories.
+// The categories (map keys) are generated from the provided function `category`.
+func GroupBy[T any, U comparable](slice []T, category func(item T) U) map[U][]T {
 	result := make(map[U][]T)
 
 	for _, v := range slice {
-		key := iteratee(v)
+		key := category(v)
 		if _, ok := result[key]; !ok {
 			result[key] = []T{}
 		}
@@ -942,13 +840,6 @@ func UnionBy[T any, V comparable](predicate func(item T) V, slices ...[]T) []T {
 	}
 
 	return result
-}
-
-// Deprecated:  Please use Concat() function instead.
-// Merge all given slices into one slice.
-// Play: https://go.dev/play/p/lbjFp784r9N
-func Merge[T any](slices ...[]T) []T {
-	return Concat(slices...)
 }
 
 // Intersection creates a slice of unique elements that included by all slices.

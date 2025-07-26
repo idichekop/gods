@@ -36,77 +36,6 @@ func TestContainsSubSlice(t *testing.T) {
 	}
 }
 
-func TestCompact(t *testing.T) {
-	t.Parallel()
-
-	assert := internal.NewAssert(t, "TesCompact")
-
-	assert.Equal([]int{}, Compact([]int{0}))
-	assert.Equal([]int{1, 2, 3}, Compact([]int{0, 1, 2, 3}))
-	assert.Equal([]string{}, Compact([]string{""}))
-	assert.Equal([]string{" "}, Compact([]string{" "}))
-	assert.Equal([]string{"a", "b", "0"}, Compact([]string{"", "a", "b", "0"}))
-	assert.Equal([]bool{true, true}, Compact([]bool{false, true, true}))
-}
-
-func TestConcat(t *testing.T) {
-	t.Parallel()
-
-	assert := internal.NewAssert(t, "Concat")
-
-	assert.Equal([]int{1, 2, 3, 4, 5}, Concat([]int{1, 2, 3}, []int{4, 5}))
-	assert.Equal([]int{1, 2, 3, 4, 5}, Concat([]int{1, 2, 3}, []int{4}, []int{5}))
-}
-
-func BenchmarkConcat(b *testing.B) {
-	slice1 := []int{1, 2, 3}
-	slice2 := []int{4, 5, 6}
-	slice3 := []int{7, 8, 9}
-
-	for i := 0; i < b.N; i++ {
-		result := Concat(slice1, slice2, slice3)
-		if len(result) == 0 {
-			b.Fatal("unexpected empty result")
-		}
-	}
-}
-
-func TestEqual(t *testing.T) {
-	t.Parallel()
-
-	assert := internal.NewAssert(t, "TestEqual")
-
-	slice1 := []int{1, 2, 3}
-	slice2 := []int{1, 2, 3}
-	slice3 := []int{3, 2, 1}
-
-	assert.Equal(true, Equal(slice1, slice2))
-	assert.Equal(false, Equal(slice1, slice3))
-	assert.Equal(false, Equal(slice2, slice3))
-}
-
-// go test -fuzz=Fuzz -fuzztime=10s .
-func FuzzEqual(f *testing.F) {
-	f.Fuzz(func(t *testing.T, a, b []byte) {
-		Equal(a, b)
-	})
-}
-
-func TestEqualWith(t *testing.T) {
-	t.Parallel()
-
-	assert := internal.NewAssert(t, "TestEqualWith")
-
-	slice1 := []int{1, 2, 3}
-	slice2 := []int{2, 4, 6}
-
-	isDouble := func(a, b int) bool {
-		return b == a*2
-	}
-
-	assert.Equal(true, EqualWith(slice1, slice2, isDouble))
-}
-
 func TestEvery(t *testing.T) {
 	t.Parallel()
 
@@ -229,21 +158,6 @@ func TestFilter(t *testing.T) {
 	})
 }
 
-func TestGroupBy(t *testing.T) {
-	t.Parallel()
-
-	assert := internal.NewAssert(t, "TestGroupBy")
-
-	nums := []int{1, 2, 3, 4, 5, 6}
-	evenFunc := func(i, num int) bool {
-		return (num % 2) == 0
-	}
-	even, odd := GroupBy(nums, evenFunc)
-
-	assert.Equal([]int{2, 4, 6}, even)
-	assert.Equal([]int{1, 3, 5}, odd)
-}
-
 func TestGroupWith(t *testing.T) {
 	t.Parallel()
 
@@ -258,7 +172,7 @@ func TestGroupWith(t *testing.T) {
 		6: {6.1, 6.3},
 	}
 
-	assert.Equal(expected, GroupWith(nums, floor))
+	assert.Equal(expected, GroupBy(nums, floor))
 }
 
 func TestCount(t *testing.T) {
@@ -281,7 +195,7 @@ func TestCountBy(t *testing.T) {
 	}
 
 	assert := internal.NewAssert(t, "TestCountBy")
-	assert.Equal(3, CountBy(nums, evenFunc))
+	assert.Equal(3, CountIf(nums, evenFunc))
 }
 
 func TestFind(t *testing.T) {
@@ -965,20 +879,6 @@ func TestUnionBy(t *testing.T) {
 
 	result := UnionBy(testFunc, []int{0, 1, 2, 3, 4, 5}, []int{0, 2, 10})
 	assert.Equal(result, []int{0, 2, 4, 10})
-}
-
-func TestMerge(t *testing.T) {
-	t.Parallel()
-
-	assert := internal.NewAssert(t, "TestMerge")
-
-	s1 := []int{1, 2, 3, 4}
-	s2 := []int{2, 3, 4, 5}
-	s3 := []int{4, 5, 6}
-
-	assert.Equal([]int{1, 2, 3, 4, 2, 3, 4, 5, 4, 5, 6}, Merge(s1, s2, s3))
-	assert.Equal([]int{1, 2, 3, 4, 2, 3, 4, 5}, Merge(s1, s2))
-	assert.Equal([]int{2, 3, 4, 5, 4, 5, 6}, Merge(s2, s3))
 }
 
 func TestIntersection(t *testing.T) {
@@ -1875,10 +1775,10 @@ func TestConcatBy(t *testing.T) {
 	})
 }
 
-func TestEqualUnordered(t *testing.T) {
+func TestIsPermutation(t *testing.T) {
 	t.Parallel()
 
-	assert := internal.NewAssert(t, "TestEqualUnordered")
+	assert := internal.NewAssert(t, "TestIsPermutation")
 
 	tests := []struct {
 		slice1, slice2 []int
@@ -1893,6 +1793,6 @@ func TestEqualUnordered(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		assert.Equal(test.expected, EqualUnordered(test.slice1, test.slice2))
+		assert.Equal(test.expected, IsPermutation(test.slice1, test.slice2))
 	}
 }

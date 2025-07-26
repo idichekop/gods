@@ -21,36 +21,6 @@ func ExampleContainsSubSlice() {
 	// false
 }
 
-func ExampleCompact() {
-	result1 := Compact([]int{0})
-	result2 := Compact([]int{0, 1, 2, 3})
-	result3 := Compact([]string{"", "a", "b", "0"})
-	result4 := Compact([]bool{false, true, true})
-
-	fmt.Println(result1)
-	fmt.Println(result2)
-	fmt.Println(result3)
-	fmt.Println(result4)
-
-	// Output:
-	// []
-	// [1 2 3]
-	// [a b 0]
-	// [true true]
-}
-
-func ExampleConcat() {
-	result1 := Concat([]int{1, 2}, []int{3, 4})
-	result2 := Concat([]string{"a", "b"}, []string{"c"}, []string{"d"})
-
-	fmt.Println(result1)
-	fmt.Println(result2)
-
-	// Output:
-	// [1 2 3 4]
-	// [a b c d]
-}
-
 func ExampleDifference() {
 	slice1 := []int{1, 2, 3, 4, 5}
 	slice2 := []int{4, 5, 6}
@@ -93,38 +63,6 @@ func ExampleDifferenceWith() {
 
 	// Output:
 	// [1 5]
-}
-
-func ExampleEqual() {
-	slice1 := []int{1, 2, 3}
-	slice2 := []int{1, 2, 3}
-	slice3 := []int{1, 3, 2}
-
-	result1 := Equal(slice1, slice2)
-	result2 := Equal(slice1, slice3)
-
-	fmt.Println(result1)
-	fmt.Println(result2)
-
-	// Output:
-	// true
-	// false
-}
-
-func ExampleEqualWith() {
-	slice1 := []int{1, 2, 3}
-	slice2 := []int{2, 4, 6}
-
-	isDouble := func(a, b int) bool {
-		return b == a*2
-	}
-
-	result := EqualWith(slice1, slice2, isDouble)
-
-	fmt.Println(result)
-
-	// Output:
-	// true
 }
 
 func ExampleEvery() {
@@ -216,14 +154,14 @@ func ExampleCount() {
 	// 2
 }
 
-func ExampleCountBy() {
+func ExampleCountIf() {
 	nums := []int{1, 2, 3, 4, 5}
 
 	isEven := func(i, num int) bool {
 		return num%2 == 0
 	}
 
-	result := CountBy(nums, isEven)
+	result := CountIf(nums, isEven)
 
 	fmt.Println(result)
 
@@ -232,30 +170,13 @@ func ExampleCountBy() {
 }
 
 func ExampleGroupBy() {
-	nums := []int{1, 2, 3, 4, 5}
-
-	isEven := func(i, num int) bool {
-		return num%2 == 0
-	}
-
-	even, odd := GroupBy(nums, isEven)
-
-	fmt.Println(even)
-	fmt.Println(odd)
-
-	// Output:
-	// [2 4]
-	// [1 3 5]
-}
-
-func ExampleGroupWith() {
 	nums := []float64{6.1, 4.2, 6.3}
 
 	floor := func(num float64) float64 {
 		return math.Floor(num)
 	}
 
-	result := GroupWith(nums, floor) //map[float64][]float64
+	result := GroupBy(nums, floor) //map[float64][]float64
 
 	fmt.Println(result)
 
@@ -830,18 +751,6 @@ func ExampleUnionBy() {
 	// [1 2 4]
 }
 
-func ExampleMerge() {
-	nums1 := []int{1, 2, 3}
-	nums2 := []int{3, 4}
-
-	result := Merge(nums1, nums2)
-
-	fmt.Println(result)
-
-	// Output:
-	// [1 2 3 3 4]
-}
-
 func ExampleIntersection() {
 	nums1 := []int{1, 2, 3}
 	nums2 := []int{2, 3, 4}
@@ -1276,9 +1185,9 @@ func ExampleConcatBy() {
 	// 90
 }
 
-func ExampleEqualUnordered() {
-	result1 := EqualUnordered([]int{1, 2, 3}, []int{3, 2, 1})
-	result2 := EqualUnordered([]int{1, 2, 3}, []int{4, 5, 6})
+func ExampleIsPermutation() {
+	result1 := IsPermutation([]int{1, 2, 3}, []int{3, 2, 1})
+	result2 := IsPermutation([]int{1, 2, 3}, []int{4, 5, 6})
 
 	fmt.Println(result1)
 	fmt.Println(result2)
