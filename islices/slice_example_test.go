@@ -184,23 +184,6 @@ func ExampleGroupBy() {
 	// map[4:[4.2] 6:[6.1 6.3]]
 }
 
-func ExampleFind() {
-	nums := []int{1, 2, 3, 4, 5}
-
-	isEven := func(i, num int) bool {
-		return num%2 == 0
-	}
-
-	result, ok := Find(nums, isEven)
-
-	fmt.Println(*result)
-	fmt.Println(ok)
-
-	// Output:
-	// 2
-	// true
-}
-
 func ExampleFindLast() {
 	nums := []int{1, 2, 3, 4, 5}
 
@@ -215,23 +198,6 @@ func ExampleFindLast() {
 
 	// Output:
 	// 4
-	// true
-}
-
-func ExampleFindBy() {
-	nums := []int{1, 2, 3, 4, 5}
-
-	isEven := func(i, num int) bool {
-		return num%2 == 0
-	}
-
-	result, ok := FindBy(nums, isEven)
-
-	fmt.Println(result)
-	fmt.Println(ok)
-
-	// Output:
-	// 2
 	// true
 }
 

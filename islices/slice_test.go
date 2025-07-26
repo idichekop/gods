@@ -198,47 +198,6 @@ func TestCountBy(t *testing.T) {
 	assert.Equal(3, CountIf(nums, evenFunc))
 }
 
-func TestFind(t *testing.T) {
-	t.Parallel()
-
-	nums := []int{1, 2, 3, 4, 5}
-	even := func(i, num int) bool {
-		return num%2 == 0
-	}
-	result, ok := Find(nums, even)
-
-	assert := internal.NewAssert(t, "TestFind")
-
-	assert.Equal(true, ok)
-	assert.Equal(2, *result)
-
-	_, ok = Find(nums, func(_ int, v int) bool {
-		return v == 6
-	})
-
-	assert.Equal(false, ok)
-}
-
-func TestFindBy(t *testing.T) {
-	t.Parallel()
-
-	assert := internal.NewAssert(t, "TestFindBy")
-
-	nums := []int{1, 2, 3, 4, 5}
-
-	result, ok := FindBy(nums, func(i, num int) bool {
-		return num%2 == 0
-	})
-	assert.Equal(true, ok)
-	assert.Equal(2, result)
-
-	result, ok = FindBy(nums, func(_ int, v int) bool {
-		return v == 6
-	})
-	assert.Equal(false, ok)
-	assert.Equal(0, result)
-}
-
 func TestFindLastBy(t *testing.T) {
 	t.Parallel()
 

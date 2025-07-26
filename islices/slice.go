@@ -250,15 +250,6 @@ func GroupBy[T any, U comparable](slice []T, category func(item T) U) map[U][]T 
 	return result
 }
 
-// Find iterates over elements of slice, returning the first one that passes a truth test on predicate function.
-// If return T is nil then no items matched the predicate func.
-// Play: https://go.dev/play/p/CBKeBoHVLgq
-// Deprecated
-func Find[T any](slice []T, predicate func(index int, item T) bool) (*T, bool) {
-	v, ok := FindBy(slice, predicate)
-	return &v, ok
-}
-
 // FindLast iterates over elements of slice from end to begin,
 // return the first one that passes a truth test on predicate function.
 // If return T is nil then no items matched the predicate func.
@@ -267,27 +258,6 @@ func Find[T any](slice []T, predicate func(index int, item T) bool) (*T, bool) {
 func FindLast[T any](slice []T, predicate func(index int, item T) bool) (*T, bool) {
 	v, ok := FindLastBy(slice, predicate)
 	return &v, ok
-}
-
-// FindBy iterates over elements of slice, returning the first one that passes a truth test on predicate function.
-// If return T is nil or zero value then no items matched the predicate func.
-// In contrast to Find or FindLast, its return value no longer requires dereferencing
-// Play: https://go.dev/play/p/n1lysBYl-GB
-func FindBy[T any](slice []T, predicate func(index int, item T) bool) (v T, ok bool) {
-	index := -1
-
-	for i, v := range slice {
-		if predicate(i, v) {
-			index = i
-			break
-		}
-	}
-
-	if index == -1 {
-		return v, false
-	}
-
-	return slice[index], true
 }
 
 // FindLastBy iterates over elements of slice, returning the last one that passes a truth test on predicate function.
